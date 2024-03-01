@@ -1,18 +1,9 @@
 defmodule Fishy do
-  @moduledoc """
-  Documentation for `Fishy`.
-  """
+  def run(text) do
+    {:ok, model_info} = Bumblebee.load_model({:hf, "ealvaradob/bert-finetuned-phishing"})
+    {:ok, tokenizer} = Bumblebee.load_tokenizer({:hf, "ealvaradob/bert-finetuned-phishing"})
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Fishy.hello()
-      :world
-
-  """
-  def hello do
-    :world
+    serving = Bumblebee.Text.text_classification(model_info, tokenizer)
+    Nx.Serving.run(serving, text)
   end
 end
